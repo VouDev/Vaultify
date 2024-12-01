@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Vaultify.Domain.Entities;
-using Vaultify.Domain.Interfaces;
+using Vaultify.Application.Interfaces;
 using Vaultify.Infrastructure.Contexts;
 
 namespace Vaultify.Infrastructure.Repositories;
