@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vaultify.API", "Vaultify.API\Vaultify.API.csproj", "{DAA318DE-263F-46D3-B803-32DF266B136A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vaultify.Domain", "Vaultify.Domain\Vaultify.Domain.csproj", "{ECAC03DF-3953-4EAD-A000-5B057C18B78E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vaultify.Application", "Vaultify.Application\Vaultify.Application.csproj", "{11CCFE29-CB99-456B-8143-FB84D2B2223D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vaultify.Infrastructure", "Vaultify.Infrastructure\Vaultify.Infrastructure.csproj", "{77249D37-0B02-4BDA-9F35-F86A4494E96E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{AC3FE1D4-9120-4A0B-800A-03364DFA7B46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vaultify.Tests", "Vaultify.Tests\Vaultify.Tests.csproj", "{AD5BA713-FF63-4FA2-A276-8C50CB1FE6CD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DAA318DE-263F-46D3-B803-32DF266B136A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAA318DE-263F-46D3-B803-32DF266B136A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAA318DE-263F-46D3-B803-32DF266B136A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAA318DE-263F-46D3-B803-32DF266B136A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECAC03DF-3953-4EAD-A000-5B057C18B78E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECAC03DF-3953-4EAD-A000-5B057C18B78E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECAC03DF-3953-4EAD-A000-5B057C18B78E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECAC03DF-3953-4EAD-A000-5B057C18B78E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11CCFE29-CB99-456B-8143-FB84D2B2223D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11CCFE29-CB99-456B-8143-FB84D2B2223D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11CCFE29-CB99-456B-8143-FB84D2B2223D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11CCFE29-CB99-456B-8143-FB84D2B2223D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77249D37-0B02-4BDA-9F35-F86A4494E96E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77249D37-0B02-4BDA-9F35-F86A4494E96E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77249D37-0B02-4BDA-9F35-F86A4494E96E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77249D37-0B02-4BDA-9F35-F86A4494E96E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD5BA713-FF63-4FA2-A276-8C50CB1FE6CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD5BA713-FF63-4FA2-A276-8C50CB1FE6CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD5BA713-FF63-4FA2-A276-8C50CB1FE6CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD5BA713-FF63-4FA2-A276-8C50CB1FE6CD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {10B61408-E34B-47EE-A8FB-9BC2A9823381}
+	EndGlobalSection
+EndGlobal

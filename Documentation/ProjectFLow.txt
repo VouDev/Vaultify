@@ -1,0 +1,13 @@
+Create projects:
+    Vaultify.API
+    Vaultify.Application
+    Vaultify.Domain
+    Vaultify.Infrastructure
+
+Created Entities and Repository Interfaces on Domain
+Created DbContext and Repositories in Infrastructure
+
+Created Migrations in Infrastructure
+
+Add a new project Vaultify.Tests
+Created tests to check the project so far

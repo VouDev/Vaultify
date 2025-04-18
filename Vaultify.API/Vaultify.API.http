@@ -1,0 +1,6 @@
+@Vaultify.API_HostAddress = http://localhost:5234
+
+GET {{Vaultify.API_HostAddress}}/vaultify/
+Accept: application/json
+
+###
