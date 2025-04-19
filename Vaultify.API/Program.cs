@@ -1,38 +1,54 @@
-using Microsoft.EntityFrameworkCore;
-using Vaultify.Domain.Interfaces;
+using FastEndpoints;
+using Vaultify.API.Middleware;
+using Vaultify.Infrastructure;
 using Vaultify.Infrastructure.Data;
-using Vaultify.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container
 builder.Services.AddControllers();
 
-// Configure SQLite database
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Register all infrastructure services (database, repositories, etc.)
+builder.Services.AddInfrastructure(builder.Configuration);
 
-// Register repositories
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IPasswordVaultRepository, PasswordVaultRepository>();
+// Add FastEndpoints
+builder.Services.AddFastEndpoints();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Configure Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Use global exception handling middleware
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+app.UseHttpsRedirection();
+app.UseCors("AllowReactApp");
 app.UseAuthorization();
 
+// Configure FastEndpoints
+app.UseFastEndpoints();
+
+// Map traditional controllers
 app.MapControllers();
 
 // Ensure database is created
