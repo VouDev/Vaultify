@@ -1,8 +1,6 @@
-using System;
-using System.Threading.Tasks;
 using Vaultify.Domain.Interfaces.Repositories;
 
-namespace Vaultify.Infrastructure.Extensions;
+namespace Vaultify.Application.Extensions;
 
 /// <summary>
 /// Extension methods for IUnitOfWork
@@ -16,9 +14,7 @@ public static class UnitOfWorkExtensions
     /// <param name="unitOfWork">The unit of work</param>
     /// <param name="operation">The asynchronous operation to execute</param>
     /// <returns>The result of the operation</returns>
-    public static async Task<T> ExecuteInTransactionAsync<T>(
-        this IUnitOfWork unitOfWork,
-        Func<Task<T>> operation)
+    public static async Task<T> ExecuteInTransactionAsync<T>(this IUnitOfWork unitOfWork, Func<Task<T>> operation)
     {
         await unitOfWork.BeginTransactionAsync();
         try
@@ -42,9 +38,7 @@ public static class UnitOfWorkExtensions
     /// <param name="unitOfWork">The unit of work</param>
     /// <param name="operation">The synchronous operation to execute</param>
     /// <returns>The result of the operation</returns>
-    public static async Task<T> ExecuteInTransactionAsync<T>(
-        this IUnitOfWork unitOfWork,
-        Func<T> operation)
+    public static async Task<T> ExecuteInTransactionAsync<T>(this IUnitOfWork unitOfWork, Func<T> operation)
     {
         await unitOfWork.BeginTransactionAsync();
         try
@@ -66,9 +60,7 @@ public static class UnitOfWorkExtensions
     /// </summary>
     /// <param name="unitOfWork">The unit of work</param>
     /// <param name="operation">The asynchronous operation to execute</param>
-    public static async Task ExecuteInTransactionAsync(
-        this IUnitOfWork unitOfWork,
-        Func<Task> operation)
+    public static async Task ExecuteInTransactionAsync(this IUnitOfWork unitOfWork, Func<Task> operation)
     {
         await unitOfWork.BeginTransactionAsync();
         try
@@ -89,9 +81,7 @@ public static class UnitOfWorkExtensions
     /// </summary>
     /// <param name="unitOfWork">The unit of work</param>
     /// <param name="operation">The synchronous operation to execute</param>
-    public static async Task ExecuteInTransactionAsync(
-        this IUnitOfWork unitOfWork,
-        Action operation)
+    public static async Task ExecuteInTransactionAsync(this IUnitOfWork unitOfWork, Action operation)
     {
         await unitOfWork.BeginTransactionAsync();
         try

@@ -1,10 +1,10 @@
 using Microsoft.Extensions.Logging;
+using Vaultify.Application.Extensions;
+using Vaultify.Application.Interfaces.Services.Vaults;
 using Vaultify.Domain.Entities;
 using Vaultify.Domain.Interfaces.Repositories;
-using Vaultify.Domain.Interfaces.Services.Vaults;
-using Vaultify.Infrastructure.Extensions;
 
-namespace Vaultify.Infrastructure.Services.Vaults;
+namespace Vaultify.Application.Services.Vaults;
 
 /// <summary>
 /// Implementation of password vault management service
@@ -14,9 +14,8 @@ public class PasswordVaultService : IPasswordVaultService
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<PasswordVaultService> _logger;
 
-    public PasswordVaultService(
-        IUnitOfWork unitOfWork,
-        ILogger<PasswordVaultService> logger = null)
+    public PasswordVaultService(IUnitOfWork unitOfWork,
+                                ILogger<PasswordVaultService> logger = null)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _logger = logger;

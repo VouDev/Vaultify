@@ -1,14 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Vaultify.Application.Services.Users;
 using Vaultify.Domain.Entities;
 using Vaultify.Domain.Interfaces.Repositories;
 using Vaultify.Domain.Interfaces.Security;
-using Vaultify.Domain.Interfaces.Services.Users;
+using Vaultify.Application.Interfaces.Services.Users;
 using Vaultify.Infrastructure.Data;
 using Vaultify.Infrastructure.Repositories;
 using Vaultify.Infrastructure.Security;
-using Vaultify.Infrastructure.Services.Users;
 using Xunit;
 
 namespace Vaultify.Tests.Services;

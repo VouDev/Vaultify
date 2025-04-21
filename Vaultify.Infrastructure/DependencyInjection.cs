@@ -1,15 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Vaultify.Application.Interfaces.Services.Users;
+using Vaultify.Application.Interfaces.Services.Vaults;
+using Vaultify.Application.Services.Users;
+using Vaultify.Application.Services.Vaults;
 using Vaultify.Domain.Interfaces.Repositories;
 using Vaultify.Domain.Interfaces.Security;
-using Vaultify.Domain.Interfaces.Services.Users;
-using Vaultify.Domain.Interfaces.Services.Vaults;
 using Vaultify.Infrastructure.Data;
 using Vaultify.Infrastructure.Repositories;
 using Vaultify.Infrastructure.Security;
-using Vaultify.Infrastructure.Services.Users;
-using Vaultify.Infrastructure.Services.Vaults;
 
 namespace Vaultify.Infrastructure;
 

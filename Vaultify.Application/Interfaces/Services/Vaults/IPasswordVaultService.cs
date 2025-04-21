@@ -1,6 +1,6 @@
 using Vaultify.Domain.Entities;
 
-namespace Vaultify.Domain.Interfaces.Services.Vaults;
+namespace Vaultify.Application.Interfaces.Services.Vaults;
 
 /// <summary>
 /// Service for managing password vaults

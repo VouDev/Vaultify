@@ -1,11 +1,11 @@
 using Microsoft.Extensions.Logging;
+using Vaultify.Application.Extensions;
+using Vaultify.Application.Interfaces.Services.Users;
 using Vaultify.Domain.Entities;
 using Vaultify.Domain.Interfaces.Repositories;
 using Vaultify.Domain.Interfaces.Security;
-using Vaultify.Domain.Interfaces.Services.Users;
-using Vaultify.Infrastructure.Extensions;
 
-namespace Vaultify.Infrastructure.Services.Users;
+namespace Vaultify.Application.Services.Users;
 
 /// <summary>
 /// Implementation of user account management service
@@ -16,10 +16,9 @@ public class UserService : IUserService
     private readonly IPasswordHasher _passwordHasher;
     private readonly ILogger<UserService> _logger;
 
-    public UserService(
-        IUnitOfWork unitOfWork,
-        IPasswordHasher passwordHasher,
-        ILogger<UserService> logger = null)
+    public UserService(IUnitOfWork unitOfWork,
+                       IPasswordHasher passwordHasher,
+                       ILogger<UserService> logger = null)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
@@ -88,13 +87,11 @@ public class UserService : IUserService
 
             // Find user by email
             var user = await _unitOfWork.Users.GetByEmailAsync(email, CancellationToken.None);
-            if (user == null)
-                return null;
+            if (user == null) return null;
 
             // Verify password
             var isPasswordValid = _passwordHasher.VerifyPassword(password, user.PasswordHash, user.Salt);
-            if (!isPasswordValid)
-                return null;
+            if (!isPasswordValid) return null;
 
             // Update last login time using transaction
             return await _unitOfWork.ExecuteInTransactionAsync(() =>
@@ -120,13 +117,11 @@ public class UserService : IUserService
 
             // Get user
             var user = await _unitOfWork.Users.GetByIdAsync(userId);
-            if (user == null)
-                return false;
+            if (user == null) return false;
 
             // Verify current password
             var isCurrentPasswordValid = _passwordHasher.VerifyPassword(currentPassword, user.PasswordHash, user.Salt);
-            if (!isCurrentPasswordValid)
-                return false;
+            if (!isCurrentPasswordValid) return false;
 
             // Change password in transaction
             await _unitOfWork.ExecuteInTransactionAsync(() =>

@@ -20,10 +20,9 @@ public class UnitOfWork : IUnitOfWork
     public IUserRepository Users { get; }
     public IPasswordVaultRepository PasswordVaults { get; }
 
-    public UnitOfWork(
-        ApplicationDbContext context,
-        IUserRepository userRepository,
-        IPasswordVaultRepository passwordVaultRepository)
+    public UnitOfWork(ApplicationDbContext context,
+                      IUserRepository userRepository,
+                      IPasswordVaultRepository passwordVaultRepository)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
         Users = userRepository ?? throw new ArgumentNullException(nameof(userRepository));

@@ -1,6 +1,6 @@
 using Vaultify.Domain.Entities;
 
-namespace Vaultify.Domain.Interfaces.Services.Users;
+namespace Vaultify.Application.Interfaces.Services.Users;
 
 /// <summary>
 /// Service for managing user accounts
@@ -56,4 +56,4 @@ public interface IUserService
     /// <param name="lastName">New last name</param>
     /// <returns>The updated user</returns>
     Task<User> UpdateUserProfileAsync(Guid userId, string firstName, string lastName);
-}
+} 
