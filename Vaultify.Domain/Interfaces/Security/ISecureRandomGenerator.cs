@@ -28,6 +28,5 @@ public interface ISecureRandomGenerator
     /// <param name="includeNumbers">Whether to include numbers</param>
     /// <param name="includeUppercase">Whether to include uppercase letters</param>
     /// <returns>A secure random password</returns>
-    string GenerateSecurePassword(int length, bool includeSpecialChars = true, 
-        bool includeNumbers = true, bool includeUppercase = true);
+    string GenerateSecurePassword(int length, bool includeSpecialChars = true, bool includeNumbers = true, bool includeUppercase = true);
 } 

@@ -14,3 +14,4 @@ Created tests to check the project so far
 
 Created UserService and Security services with their Interfaces
 Added Exception handling, Exception handling Middleware, and logging.
+Added Unit of Work pattern

@@ -50,14 +50,13 @@ public class SecureRandomGenerator : ISecureRandomGenerator
     }
 
     /// <inheritdoc />
-    public string GenerateSecurePassword(int length, bool includeSpecialChars = true, 
-        bool includeNumbers = true, bool includeUppercase = true)
+    public string GenerateSecurePassword(int length, bool includeSpecialChars = true, bool includeNumbers = true, bool includeUppercase = true)
     {
         if (length < 8)
             throw new ArgumentException("Password length must be at least 8 characters", nameof(length));
 
         // Build character set based on requirements
-        StringBuilder charSet = new StringBuilder(LowercaseChars);
+        var charSet = new StringBuilder(LowercaseChars);
         
         if (includeUppercase)
             charSet.Append(UppercaseChars);
