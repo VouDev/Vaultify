@@ -226,27 +226,4 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
             throw new RepositoryException($"Error removing range of {typeof(T).Name} entities", ex);
         }
     }
-
-    public virtual async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        try
-        {
-            return await _context.SaveChangesAsync(cancellationToken);
-        }
-        catch (DbUpdateConcurrencyException ex)
-        {
-            _logger?.LogError(ex, "Concurrency conflict when saving changes for {EntityType}", typeof(T).Name);
-            throw new RepositoryException("A concurrency conflict occurred while saving changes. The entity may have been modified or deleted by another process.", ex);
-        }
-        catch (DbUpdateException ex)
-        {
-            _logger?.LogError(ex, "Database update error when saving changes for {EntityType}", typeof(T).Name);
-            throw new RepositoryException("An error occurred while saving changes to the database. This may be due to a constraint violation or other database error.", ex);
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogError(ex, "Unexpected error when saving changes for {EntityType}", typeof(T).Name);
-            throw new RepositoryException("An unexpected error occurred while saving changes to the database.", ex);
-        }
-    }
 } 

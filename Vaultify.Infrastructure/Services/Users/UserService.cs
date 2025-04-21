@@ -3,7 +3,7 @@ using Vaultify.Domain.Entities;
 using Vaultify.Domain.Interfaces.Repositories;
 using Vaultify.Domain.Interfaces.Security;
 using Vaultify.Domain.Interfaces.Services.Users;
-using Vaultify.Infrastructure.Data;
+using Vaultify.Infrastructure.Extensions;
 
 namespace Vaultify.Infrastructure.Services.Users;
 
@@ -12,20 +12,17 @@ namespace Vaultify.Infrastructure.Services.Users;
 /// </summary>
 public class UserService : IUserService
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordHasher _passwordHasher;
-    private readonly ApplicationDbContext _dbContext;
     private readonly ILogger<UserService> _logger;
 
     public UserService(
-        IUserRepository userRepository,
+        IUnitOfWork unitOfWork,
         IPasswordHasher passwordHasher,
-        ApplicationDbContext dbContext,
         ILogger<UserService> logger = null)
     {
-        _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _logger = logger;
     }
 
@@ -49,27 +46,30 @@ public class UserService : IUserService
             if (!isEmailAvailable)
                 throw new InvalidOperationException($"Email {email} is already in use");
 
-            // Hash the password
-            (string hash, string salt) = _passwordHasher.HashPassword(password);
+            // Use Unit of Work with transaction
+            return await _unitOfWork.ExecuteInTransactionAsync(async () => 
+            {
+                // Hash the password
+                (string hash, string salt) = _passwordHasher.HashPassword(password);
 
-            // Create the user
-            var user = User.Create(email, hash, salt, firstName, lastName);
+                // Create the user
+                var user = User.Create(email, hash, salt, firstName, lastName);
 
-            // Save to database
-            await _userRepository.AddAsync(user);
-            await _dbContext.SaveChangesAsync();
-
-            return user;
+                // Save to database (transaction will handle SaveChanges)
+                await _unitOfWork.Users.AddAsync(user);
+                
+                return user;
+            });
         }
         catch (ArgumentException ex)
         {
             _logger?.LogWarning(ex, "Invalid argument when creating user: {Message}", ex.Message);
-            throw; // Rethrow as these are validation errors that should be handled by the caller
+            throw; 
         }
         catch (InvalidOperationException ex)
         {
             _logger?.LogWarning(ex, "Business rule violation when creating user: {Message}", ex.Message);
-            throw; // Rethrow as these are business rule violations that should be handled by the caller
+            throw;
         }
         catch (Exception ex)
         {
@@ -87,7 +87,7 @@ public class UserService : IUserService
                 return null;
 
             // Find user by email
-            var user = await _userRepository.GetByEmailAsync(email, CancellationToken.None);
+            var user = await _unitOfWork.Users.GetByEmailAsync(email, CancellationToken.None);
             if (user == null)
                 return null;
 
@@ -96,11 +96,12 @@ public class UserService : IUserService
             if (!isPasswordValid)
                 return null;
 
-            // Update last login time
-            user.UpdateLastLogin();
-            await _dbContext.SaveChangesAsync();
-
-            return user;
+            // Update last login time using transaction
+            return await _unitOfWork.ExecuteInTransactionAsync(() =>
+            {
+                user.UpdateLastLogin();
+                return user;
+            });
         }
         catch (Exception ex)
         {
@@ -118,7 +119,7 @@ public class UserService : IUserService
                 return false;
 
             // Get user
-            var user = await _userRepository.GetByIdAsync(userId);
+            var user = await _unitOfWork.Users.GetByIdAsync(userId);
             if (user == null)
                 return false;
 
@@ -127,33 +128,24 @@ public class UserService : IUserService
             if (!isCurrentPasswordValid)
                 return false;
 
-            // Hash new password
-            (string hash, string salt) = _passwordHasher.HashPassword(newPassword);
-
-            // Update user with reflection to bypass encapsulation for this special case
-            var userType = typeof(User);
-            var passwordHashProperty = userType.GetProperty("PasswordHash");
-            var saltProperty = userType.GetProperty("Salt");
-
-            if (passwordHashProperty != null && saltProperty != null)
+            // Change password in transaction
+            await _unitOfWork.ExecuteInTransactionAsync(() =>
             {
-                passwordHashProperty.SetValue(user, hash);
-                saltProperty.SetValue(user, salt);
-            }
-            else
-            {
-                throw new InvalidOperationException("Unable to update password properties");
-            }
+                // Hash new password
+                (string hash, string salt) = _passwordHasher.HashPassword(newPassword);
 
-            _userRepository.Update(user);
-            await _dbContext.SaveChangesAsync();
+                // Update user password using domain method
+                user.UpdatePassword(hash, salt);
+                
+                _unitOfWork.Users.Update(user);
+            });
 
             return true;
         }
-        catch (InvalidOperationException ex)
+        catch (ArgumentException ex)
         {
-            _logger?.LogError(ex, "Error accessing password properties for user {UserId}", userId);
-            throw new Exception("Unable to change password due to a system error", ex);
+            _logger?.LogError(ex, "Invalid argument when changing password for user {UserId}", userId);
+            throw;
         }
         catch (Exception ex)
         {
@@ -170,7 +162,7 @@ public class UserService : IUserService
             if (string.IsNullOrWhiteSpace(email))
                 return false;
 
-            return await _userRepository.IsEmailUniqueAsync(email, CancellationToken.None);
+            return await _unitOfWork.Users.IsEmailUniqueAsync(email, CancellationToken.None);
         }
         catch (Exception ex)
         {
@@ -184,7 +176,7 @@ public class UserService : IUserService
     {
         try
         {
-            return await _userRepository.GetByIdAsync(userId);
+            return await _unitOfWork.Users.GetByIdAsync(userId);
         }
         catch (Exception ex)
         {
@@ -201,25 +193,27 @@ public class UserService : IUserService
             if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
                 throw new ArgumentException("Name fields cannot be empty");
 
-            var user = await _userRepository.GetByIdAsync(userId);
+            var user = await _unitOfWork.Users.GetByIdAsync(userId);
             if (user == null)
                 throw new InvalidOperationException($"User with ID {userId} not found");
 
-            user.UpdateName(firstName, lastName);
-            _userRepository.Update(user);
-            await _dbContext.SaveChangesAsync();
-
-            return user;
+            // Update profile in transaction
+            return await _unitOfWork.ExecuteInTransactionAsync(() =>
+            {
+                user.UpdateName(firstName, lastName);
+                _unitOfWork.Users.Update(user);
+                return user;
+            });
         }
         catch (ArgumentException ex)
         {
             _logger?.LogWarning(ex, "Invalid argument when updating user profile: {Message}", ex.Message);
-            throw; // Rethrow as these are validation errors that should be handled by the caller
+            throw; 
         }
         catch (InvalidOperationException ex)
         {
             _logger?.LogWarning(ex, "User not found during profile update: {Message}", ex.Message);
-            throw; // Rethrow as these indicate resource not found
+            throw; 
         }
         catch (Exception ex)
         {

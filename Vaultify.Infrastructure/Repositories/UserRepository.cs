@@ -67,7 +67,7 @@ public class UserRepository : BaseRepository<User>, IUserRepository
             if (user != null)
             {
                 user.UpdateLastLogin();
-                await SaveChangesAsync(cancellationToken);
+                // SaveChangesAsync will be handled by UnitOfWork
             }
             else
             {

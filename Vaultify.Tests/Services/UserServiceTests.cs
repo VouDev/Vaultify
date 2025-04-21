@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Vaultify.Domain.Entities;
+using Vaultify.Domain.Interfaces.Repositories;
 using Vaultify.Domain.Interfaces.Security;
 using Vaultify.Domain.Interfaces.Services.Users;
 using Vaultify.Infrastructure.Data;
@@ -16,6 +19,8 @@ public class UserServiceTests : IDisposable
     private readonly IPasswordHasher _passwordHasher;
     private readonly IUserService _userService;
     private readonly UserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ILogger<UserService> _logger;
 
     public UserServiceTests()
     {
@@ -27,9 +32,20 @@ public class UserServiceTests : IDisposable
         _context.Database.OpenConnection();
         _context.Database.EnsureCreated();
 
+        // Create mock logger
+        var loggerMock = new Mock<ILogger<UserService>>();
+        _logger = loggerMock.Object;
+
+        // Create real repositories and passwordHasher
         _passwordHasher = new PasswordHasher();
         _userRepository = new UserRepository(_context);
-        _userService = new UserService(_userRepository, _passwordHasher, _context);
+        var passwordVaultRepository = new PasswordVaultRepository(_context);
+
+        // Create unit of work
+        _unitOfWork = new UnitOfWork(_context, _userRepository, passwordVaultRepository);
+        
+        // Initialize service with unit of work
+        _userService = new UserService(_unitOfWork, _passwordHasher, _logger);
     }
 
     public void Dispose()

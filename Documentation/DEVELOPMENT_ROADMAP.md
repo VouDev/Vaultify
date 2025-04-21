@@ -13,9 +13,10 @@
 
 ### Sprint 2: API Foundation & User Management (IN PROGRESS)
 - [ ] FastEndpoints implementation with Handler Pattern
+- [ ] Complete conversion of all existing services to handlers
 - [ ] Domain model validation
 - [ ] Result Pattern implementation for operation outcomes
-- [ ] User registration and management endpoints
+- [ ] User registration and management endpoints using handler pattern
 - [ ] Unit tests for domain models and repositories
 - [ ] Base API documentation setup (Swagger/OpenAPI)
 - [ ] ✅ **LEARNING MILESTONE**: API Design with FastEndpoints and Result Pattern
@@ -185,6 +186,7 @@
 ### Architecture & Patterns
 - **Clean Architecture**: Domain-centric layered architecture with clear separation of concerns
 - **Vertical Slice Architecture**: Using FastEndpoints to organize by feature rather than layer
+- **Handler Pattern**: Replacing traditional service layer with feature-specific handlers
 - **CQRS Pattern**: Pragmatic implementation with separate command/query handlers but shared data models
 - **Repository Pattern**: Generic repository with specialized repositories for entities
 - **Result Pattern**: Explicit success/failure return values instead of exceptions for domain operations
@@ -243,4 +245,6 @@
 - Priorities may shift based on feedback and requirements
 - Security is a continuous process throughout all phases
 - Sprints include both implementation and testing
-- Regular review points after each phase to evaluate and adjust 
+- Regular review points after each phase to evaluate and adjust
+- All existing services will be completely converted to handlers in Sprint 2 before implementing new features
+- After Sprint 2, all new features will be implemented using handlers directly, with no new services created 

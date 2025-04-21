@@ -93,4 +93,21 @@ public class User
     {
         IsActive = true;
     }
+
+    /// <summary>
+    /// Updates the user's password
+    /// </summary>
+    /// <param name="passwordHash">The new password hash</param>
+    /// <param name="salt">The new salt</param>
+    /// <exception cref="ArgumentException">Thrown when password hash or salt is empty</exception>
+    public void UpdatePassword(string passwordHash, string salt)
+    {
+        if (string.IsNullOrWhiteSpace(passwordHash))
+            throw new ArgumentException("Password hash cannot be empty", nameof(passwordHash));
+        if (string.IsNullOrWhiteSpace(salt))
+            throw new ArgumentException("Salt cannot be empty", nameof(salt));
+            
+        PasswordHash = passwordHash;
+        Salt = salt;
+    }
 }
